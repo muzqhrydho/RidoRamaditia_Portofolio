@@ -1,59 +1,79 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
 body {
-    font-family: Arial, sans-serif;
+    background: #eff4fd; /* Light background */
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    margin: 0;
+    height: 100vh; /* Full viewport height */
 }
 
 .login-container {
-    background-color: white;
-    padding: 60px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 300px;
+    background: #fff; /* White background for the form */
+    padding: 40px;
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Shadow effect */
+    width: 300px; /* Fixed width */
+    text-align: center; /* Center text */
 }
 
 h2 {
-    text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 20px; /* Space below heading */
+    color: #212121; /* Dark color for heading */
 }
 
 .input-group {
-    margin-bottom: 15px;
+    margin-bottom: 15px; /* Space between input groups */
 }
 
-.input-group label {
-    display: block;
-    font-size: 14px;
-    margin-bottom: 5px;
+label {
+    display: block; /* Block display for labels */
+    margin-bottom: 5px; /* Space below label */
+    color: #555; /* Gray color for labels */
 }
 
-.input-group input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 14px;
+input[type="text"],
+input[type="password"] {
+    width: 100%; /* Full width */
+    padding: 10px; /* Padding inside input */
+    border: 1px solid #ddd; /* Light border */
+    border-radius: 5px; /* Rounded corners */
 }
 
-.input-group input:focus {
-    border-color: #007bff;
-    outline: none;
+button {
+    background: #212121; /* Dark background for button */
+    color: #fff; /* White text */
+    padding: 10px; /* Padding inside button */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    width: 100%; /* Full width */
+    font-weight: bold; /* Bold text */
 }
 
-.btn-login {
-    width: 100%;
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 16px;
-    cursor: pointer;
+button:hover {
+    background: #333; /* Darker background on hover */
 }
 
-.btn-login:hover {
-    background-color: #0056b3;
+.social-login {
+    margin-top: 20px; /* Space above social login */
+}
+
+.social-login p {
+    margin-bottom: 10px; /* Space below text */
+}
+
+.social-login a {
+    margin: 0 5px; /* Space between icons */
+    color: #212121; /* Dark color for icons */
+    font-size: 20px; /* Size of icons */
+}
+
+.social-login a:hover {
+    color: orange; /* Change color on hover */
 }
