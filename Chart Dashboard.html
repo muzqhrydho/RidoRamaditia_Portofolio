@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
+</head>
+<body>
+
+<h2>Laporan Penjualan</h2>
+
+<table>
+  <tr>
+    <th>Bulan</th>
+    <th>Januari</th>
+    <th>Februari</th>
+    <th>Maret</th>
+    <th>April</th>
+    <th>Mei</th>
+    <th>Juni</th>
+    <th>Juli</th>
+    <th>Agustus</th>
+    <th>September</th>
+    <th>Oktober</th>
+    <th>November</th>
+    <th>Desember</th>
+  </tr>
+  <tr>
+    <td>2022</td>
+    <td>4.017</td>
+    <td>6.135</td>
+    <td>7.091</td>
+    <td>5.841</td>
+    <td>5.036</td>
+    <td>4.547</td>
+    <td>3.467</td>
+    <td>3.970</td>
+    <td>6.313</td>
+    <td>3.595</td>
+    <td>9.207</td>
+    <td>5.945</td>
+  </tr>
+  <tr>
+    <td>2023</td>
+    <td>2.416</td>
+    <td>4.136</td>
+    <td>7.935</td>
+    <td>8.004</td>
+    <td>9.505</td>
+    <td>5.026</td>
+    <td>6.108</td>
+    <td>6.343</td>
+    <td>9.404</td>
+    <td>9.280</td>
+    <td>9.287</td>
+    <td>8.689</td>
+  </tr>
+</table>
+
+<canvas id="myChart" style="width:100%;max-width:700px"></canvas>
+
+<script>
+const ctx = document.getElementById('myChart').getContext('2d');
+const myChart = new Chart(ctx, {
