@@ -1,59 +1,24 @@
-/* General Styles */
+/* Styling Halaman dan Canvas Tetris */
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f0f4f8; /* Light background color */
+    font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* Full viewport height */
+    height: 100vh;
     margin: 0;
-}
-
-.tetris-container {
-    background-color: #ffffff; /* White background for the game */
-    border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    text-align: center;
+    background-color: #222;
+    color: white;
 }
 
 h1 {
-    color: #4a90e2; /* Blue color for the title */
-    margin-bottom: 20px;
+    position: absolute;
+    top: 20px;
+    font-size: 2em;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
 }
 
 canvas {
-    border: 2px solid #4a90e2; /* Blue border for the canvas */
-    background-color: #e0e0e0; /* Light gray background for the game area */
-}
-
-.controls {
-    margin: 20px 0;
-}
-
-button {
-    padding: 10px 15px;
-    font-size: 16px; /* Font size for buttons */
-    border: none;
-    border-radius: 5px;
-    background-color: #4a90e2; /* Blue background for buttons */
-    color: white; /* White text color */
-    cursor: pointer;
-    margin: 0 5px; /* Space between buttons */
-    transition: background-color 0.3s, transform 0.2s; /* Transition effects */
-}
-
-button:hover {
-    background-color: #007BFF; /* Darker blue on hover */
-    transform: scale(1.05); /* Slightly enlarge on hover */
-}
-
-button:active {
-    transform: scale(0.95); /* Slightly shrink on click */
-}
-
-.score {
-    margin-top: 20px;
-    font-size: 20px; /* Font size for score */
-    color: #333; /* Dark text color */
+    background-color: #000;
+    border: 5px solid #00ffff;
+    box-shadow: 0px 0px 20px rgba(0, 255, 255, 0.8);
 }
