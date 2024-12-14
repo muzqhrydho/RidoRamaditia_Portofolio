@@ -87,3 +87,46 @@ span {
     position: absolute;
     bottom: 0;
     right: 100px;
+}
+
+.images img {
+    max-width: 100%; /* Ensure images scale down */
+    height: auto; /* Maintain aspect ratio */
+}
+
+.social {
+    margin-left: 8%;
+    margin-top: 100px;
+}
+
+.social a {
+    font-size: 30px;
+    color: #212121;
+    margin-right: 20px;
+}
+
+.social a:hover {
+    color: orange;
+}
+
+/* New Styles for Projects Section */
+#projects {
+    background: #f9f9f9; /* Light background for contrast */
+    padding: 50px 0; /* Padding for spacing */
+    text-align: center; /* Center align text */
+}
+
+#projects h2 {
+    font-size: 36px;
+    color: #212121;
+    margin-bottom: 30px;
+}
+
+#projects ul {
+    list-style: none; /* Remove default list styling */
+    padding: 0; /* Remove padding */
+}
+
+#projects li {
+    background: #fff; /* White background for project items */
+    border: 1px solid #ddd
