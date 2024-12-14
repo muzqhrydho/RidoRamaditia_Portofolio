@@ -1,411 +1,460 @@
-// Konstanta Dasar
-const BOARD_WIDTH = 10;
-const BOARD_HEIGHT = 20;
-const BOARD_SIZE = BOARD_WIDTH * BOARD_HEIGHT;
+let keyPressUp = false;
+let keyPressDown = false;
+let keyPressLeft = false;
+let keyPressRight = false;
+var shapeList = [
+  [0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0], // I
+  [0, 2, 0, 0, 2, 0, 0, 2, 2], // L
+  [0, 3, 0, 0, 3, 0, 3, 3, 0], // J
+  [4, 4, 0, 0, 4, 4, 0, 0, 0], // Z
+  [0, 5, 5, 5, 5, 0, 0, 0, 0], // S
+  [0, 0, 0, 6, 6, 6, 0, 6, 0], // T
+  [7, 7, 7, 7], // O
+];
+var palletteMono = [];
+var pallette = [
+  [255, 255, 255], // 0, void
+  [255, 224, 0], // 1 Yellow
+  [255, 32, 0], // 2 Red
+  [32, 255, 0], // 3 Green
+  [16, 128, 255], // 4 Blue
+  [255, 96, 16], // 5 Orange
+  [0, 196, 255], // 6 Light Blue
+  [128, 0, 255], // 7 Purple
+];
+function setup() {
+  createCanvas(windowWidth - 40, windowHeight - 40);
 
-// Konfigurasi Kecepatan Permainan
-const GAME_SPEEDS = {
-    initial: 1000,
-    speedUpInterval: 30000,  // Percepat setiap 30 detik
-    speedReduction: 100      // Kurangi 100ms setiap percepatan
-};
+  this.tetris = new Tetris(10, 20);
+  this.timer = new Timer();
+  frameRate(60);
+  palletteMono = [];
+  for (let i = 0; i < pallette.length; i++) {
+    let rgb = pallette[i];
+    let gray = rgb[0] + rgb[1] + rgb[2];
+    palletteMono[i] = [];
+    palletteMono[i][0] = 255 * gray;
+    palletteMono[i][1] = 255 * gray;
+    palletteMono[i][2] = 255 * gray;
+  }
+}
+function draw() {
+  if (this.timer.updateStep()) {
+    applyInput(25);
+  }
+  this.tetris.update();
+  this.tetris.display(this);
+}
 
-// Definisi Tetromino
-const TETROMINOS = {
-    I: {
-        shape: [
-            [0,0,0,0],
-            [1,1,1,1],
-            [0,0,0,0],
-            [0,0,0,0]
-        ],
-        color: 'tetromino-I'
-    },
-    O: {
-        shape: [
-            [1,1],
-            [1,1]
-        ],
-        color: 'tetromino-O'
-    },
-    T: {
-        shape: [
-            [0,1,0],
-            [1,1,1],
-            [0,0,0]
-        ],
-        color: 'tetromino-T'
-    },
-    L: {
-        shape: [
-            [0,0,1],
-            [1,1,1],
-            [0,0,0]
-        ],
-        color: 'tetromino-L'
-    },
-    J: {
-        shape: [
-            [1,0,0],
-            [1,1,1],
-            [0,0,0]
-        ],
-        color: 'tetromino-J'
-    },
-    S: {
-        shape: [
-            [0,1,1],
-            [1,1,0],
-            [0,0,0]
-        ],
-        color: 'tetromino-S'
-    },
-    Z: {
-        shape: [
-            [1,1,0],
-            [0,1,1],
-            [0,0,0]
-        ],
-        color: 'tetromino-Z'
+function applyInput(newDelay) {
+  if (this.tetris.pause) return;
+  if (keyPressUp) this.tetris.rotate = true;
+  if (keyPressDown) this.tetris.ty = +1;
+  if (keyPressLeft) this.tetris.tx = -1;
+  if (keyPressRight) this.tetris.tx = +1;
+  this.timer.reset(newDelay);
+}
+function keyPressed() {
+  if (keyCode == 32) this.tetris.pause = !this.tetris.pause;
+  if (keyCode == 13) this.tetris.restart = true;
+  keyPressUp |= keyCode === UP_ARROW;
+  keyPressDown |= keyCode === DOWN_ARROW;
+  keyPressLeft |= keyCode === LEFT_ARROW;
+  keyPressRight |= keyCode === RIGHT_ARROW;
+  applyInput(200);
+}
+function keyReleased() {
+  keyPressUp ^= keyCode === UP_ARROW;
+  keyPressDown ^= keyCode === DOWN_ARROW;
+  keyPressLeft ^= keyCode === LEFT_ARROW;
+  keyPressRight ^= keyCode === RIGHT_ARROW;
+}
+class Tetris {
+  constructor(nx, ny) {
+    this.tGrid = new TGrid(nx, ny);
+    this.timer = new Timer();
+    this.restartGame();
+    this.shapeNext = undefined;
+    this.pickNextShape();
+  }
+  restartGame() {
+    this.tGrid.clearGrid();
+    this.restart = false;
+    this.pause = false;
+    this.gameOver = false;
+    this.spawn = true;
+    this.rotate = false;
+    this.tx = this.ty = 0;
+    this.level = 1;
+    this.rowsPerLevel = 5;
+    this.rowsCompleted = 0;
+    this.shapesCount = 0;
+    this.timer.reset(600);
+  }
+  pickNextShape() {
+    this.shapeCurr = this.shapeNext;
+    var indexNext = parseInt(random(shapeList.length));
+    this.shapeNext = shapeList[indexNext].slice();
+  }
+  update() {
+    if (this.restart) {
+      this.restartGame();
     }
-};
-
-class TetrisGame {
-    constructor(boardElement, scoreElement) {
-        // Elemen DOM
-        this.board = boardElement;
-        this.scoreElement = scoreElement;
-
-        // Status Permainan
-        this.cells = Array(BOARD_SIZE).fill(0);
-        this.currentTetromino = null;
-        this.currentPosition = 0;
-        this.gameSpeed = GAME_SPEEDS.initial;
-        this.score = 0;
-        this.level = 1;
-        this.gameOver = false;
-        this.isPaused = false;
-
-        // Binding metode untuk event listener
-        this.handleKeyPress = this.handleKeyPress.bind(this);
+    if (this.pause) {
+      return;
     }
-
-    // Inisialisasi Papan Permainan
-    initializeBoard() {
-        this.board.innerHTML = '';
-        this.cells = Array(BOARD_SIZE).fill(0);
-        
-        for (let i = 0; i < BOARD_SIZE; i++) {
-            const cell = document.createElement('div');
-            cell.classList.add('cell');
-            this.board.appendChild(cell);
+    // Spawn new shape
+    if (this.spawn) {
+      this.pickNextShape();
+      this.tGrid.setShape(this.shapeCurr);
+      this.shapesCount++;
+      this.spawn = false;
+    }
+    // Update level/rows/difficulty
+    this.level += floor(this.rowsCompleted / this.rowsPerLevel);
+    this.rowsCompleted %= this.rowsPerLevel;
+    this.timer.duration = ceil(800 / sqrt(this.level));
+    // Game over check
+    this.gameOver = this.tGrid.collision(0, 0);
+    if (this.gameOver) {
+      return;
+    }
+    // Apply user input: transforms
+    if (this.rotate) this.tGrid.rotateShape();
+    if (!this.tGrid.collision(this.tx, 0)) this.tGrid.sx += this.tx;
+    if (!this.tGrid.collision(0, this.ty)) this.tGrid.sy += this.ty;
+    // Apply game step
+    if (this.timer.updateStep()) {
+      if (!this.tGrid.collision(0, 1)) {
+        if (this.ty == 0) {
+          this.tGrid.sy++;
         }
+      } else {
+        this.tGrid.splatShape();
+        this.rowsCompleted += this.tGrid.updateRows();
+        this.spawn = true;
+      }
     }
-
-    // Memilih Tetromino Acak
-    getRandomTetromino() {
-        const keys = Object.keys(TETROMINOS);
-        const randomKey = keys[Math.floor(Math.random() * keys.length)];
-        return {
-            shape: TETROMINOS[randomKey].shape,
-            color: TETROMINOS[randomKey].color
-        };
+    // Reset transforms
+    this.rotate = false;
+    this.tx = this.ty = 0;
+  }
+  display(canvas) {
+    var off, x, y, w, h, cell;
+    var canvasW = canvas.width;
+    var canvasH = canvas.height;
+    off = 40;
+    h = canvasH - 2 * off;
+    w = canvasW - 2 * off;
+    cell = ceil(Math.min(w / this.tGrid.nx, h / this.tGrid.ny));
+    w = this.tGrid.nx * cell;
+    h = this.tGrid.ny * cell;
+    x = parseInt((canvasW - w) / 2.0);
+    y = parseInt((canvasH - h) / 2.0);
+    canvas.background(50);
+    canvas.strokeWeight(1);
+    canvas.noStroke();
+    canvas.fill(16);
+    canvas.rect(x - 4, y - 4, w + 8, h + 8);
+    canvas.fill(32);
+    canvas.rect(x - 1, y - 1, w + 3, h + 3);
+    // Game screen
+    var colors = this.pause || this.gameOver ? palletteMono : pallette;
+    this.displayGrid(canvas, x, y, w, h, colors);
+    // Shape preview
+    {
+      var _w = x - 2 * off;
+      var _h = canvasH - 2 * off;
+      var _y = off;
+      var _x = off + x + w;
+      this.displayNextShape(canvas, _x, _y, _w, _h);
     }
-
-    // Menggambar Tetromino
-    drawTetromino() {
-        const shape = this.currentTetromino.shape;
-        const size = shape.length;
-
-        for (let y = 0; y < size; y++) {
-            for (let x = 0; x < size; x++) {
-                if (shape[y][x]) {
-                    const boardIndex = this.currentPosition + (y * BOARD_WIDTH) + x;
-                    if (boardIndex >= 0 && boardIndex < BOARD_SIZE) {
-                        const cell = this.board.children[boardIndex];
-                        cell.classList.add('tetromino', this.currentTetromino.color);
-                    }
-                }
-            }
-        }
+    // Header
+    {
+      var ty = off + 32;
+      var tx = x + w + x / 2;
+      var txtTitle = "TETRIS GAME";
+      canvas.textAlign(CENTER, CENTER);
+      canvas.noStroke();
+      canvas.textSize(32);
+      canvas.fill(200);
+      canvas.text(txtTitle, tx, ty);
     }
-
-    // Menghapus Gambar Tetromino
-    undrawTetromino() {
-        const shape = this.currentTetromino.shape;
-        const size = shape.length;
-
-        for (let y = 0; y < size; y++) {
-            for (let x = 0; x < size; x++) {
-                if (shape[y][x]) {
-                    const boardIndex = this.currentPosition + (y * BOARD_WIDTH) + x;
-                    if (boardIndex >= 0 && boardIndex < BOARD_SIZE) {
-                        const cell = this.board.children[boardIndex];
-                        cell.classList.remove('tetromino', this.currentTetromino.color);
-                    }
-                }
-            }
-        }
+    // Came level, ...
+    {
+      var ty = canvasH / 2 - 150;
+      var tx1 = x + w + x / 2;
+      var txtLevel = "LEVEL " + this.level;
+      var txtProgress = "ROW " + this.rowsCompleted + "/" + this.rowsPerLevel;
+      var txtShapes = "SHAPE " + this.shapesCount;
+      canvas.textAlign(CENTER, CENTER);
+      canvas.noStroke();
+      canvas.fill(200);
+      canvas.textSize(24);
+      canvas.text(txtLevel, tx1, ty);
+      canvas.fill(96);
+      canvas.textSize(16);
+      canvas.text(txtProgress, tx1, (ty += 24));
+      canvas.text(txtShapes, tx1, (ty += 16));
     }
-
-    // Mengecek Tabrakan
-    checkCollision() {
-        const shape = this.currentTetromino.shape;
-        const size = shape.length;
-
-        for (let y = 0; y < size; y++) {
-            for (let x = 0; x < size; x++) {
-                if (shape[y][x]) {
-                    const boardIndex = this.currentPosition + (y * BOARD_WIDTH) + x;
-                    
-                    // Cek batas papan
-                    if (
-                        boardIndex >= BOARD_SIZE ||
-                        (boardIndex % BOARD_WIDTH < this.currentPosition % BOARD_WIDTH && x > 0) ||
-                        (boardIndex % BOARD_WIDTH > (this.currentPosition % BOARD_WIDTH) + size - 1 && x < size - 1)
-                    ) {
-                        return true;
-                    }
-
-                    // Cek tabrakan dengan blok beku
-                    if (this.cells[boardIndex]) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
+    // Game status
+    var txtGameStatus = undefined;
+    if (this.gameOver) txtGameStatus = "GAME OVER";
+    if (this.pause) txtGameStatus = "PAUSE";
+    if (txtGameStatus !== undefined) {
+      canvas.textSize(144);
+      canvas.textAlign(CENTER, CENTER);
+      canvas.noStroke();
+      canvas.fill(0, 0, 0);
+      canvas.text(txtGameStatus, canvasW / 2 + 2, canvasH / 2 + 1);
+      canvas.fill(255, 224, 0);
+      canvas.text(txtGameStatus, canvasW / 2, canvasH / 2);
     }
-
-    // Memindahkan Tetromino
-    moveTetromino(direction) {
-        this.undrawTetromino();
-        
-        switch(direction) {
-            case 'left':
-                this.currentPosition--;
-                if (this.checkCollision()) {
-                    this.currentPosition++;
-                }
-                break;
-            case 'right':
-                this.currentPosition++;
-                if (this.checkCollision()) {
-                    this.currentPosition--;
-                }
-                break;
-            case 'down':
-                this.currentPosition += BOARD_WIDTH;
-                if (this.checkCollision()) {
-                    this.currentPosition -= BOARD_WIDTH;
-                    this.freezeTetromino();
-                    this.clearLines();
-                    this.spawnTetromino();
-                }
-                break;
-        }
-
-        this.drawTetromino();
+    // Controlls
+    {
+      var ty = canvasH - 6 * 15 - off;
+      var tx1 = x + w + 40;
+      var tx2 = tx1 + 70;
+      canvas.textAlign(LEFT);
+      canvas.noStroke();
+      canvas.textSize(14);
+      canvas.fill(96);
+      canvas.text("UP", tx1, ty);
+      canvas.text("- ROTATE", tx2, ty);
+      ty += 15;
+      canvas.text("LEFT", tx1, ty);
+      canvas.text("- MOVE LEFT", tx2, ty);
+      ty += 15;
+      canvas.text("RIGHT", tx1, ty);
+      canvas.text("- MOVE RIGHT", tx2, ty);
+      ty += 15;
+      canvas.text("DOWN", tx1, ty);
+      canvas.text("- MOVE DOWN", tx2, ty);
+      ty += 25;
+      canvas.text("SPACE", tx1, ty);
+      canvas.text("- PAUSE", tx2, ty);
+      ty += 15;
+      canvas.text("ENTER", tx1, ty);
+      canvas.text("- RESTART", tx2, ty);
+      ty += 15;
     }
-
-    // Memutar Tetromino
-    rotateTetromino() {
-        this.undrawTetromino();
-        const originalShape = this.currentTetromino.shape;
-        const rotatedShape = originalShape[0].map((_, index) => 
-            originalShape.map(row => row[index]).reverse()
-        );
-        this.currentTetromino.shape = rotatedShape;
-
-        if (this.checkCollision()) {
-            this.currentTetromino.shape = originalShape;
-        }
-
-        this.drawTetromino();
-    }
-
-    // Membekukan Tetromino
-    freezeTetromino() {
-        const shape = this.currentTetromino.shape;
-        const size = shape.length;
-
-        for (let y = 0; y < size; y++) {
-            for (let x = 0; x < size; x++) {
-                if (shape[y][x]) {
-                    const boardIndex = this.currentPosition + (y * BOARD_WIDTH) + x;
-                    if (boardIndex >= 0 && boardIndex < BOARD_SIZE) {
-                        this.cells[boardIndex] = 1;
-                    }
-                }
-            }
-        }
-    }
-
-    // Menghapus Baris Penuh
-    clearLines() {
-        let linesCleared = 0;
-        for (let y = BOARD_HEIGHT - 1; y >= 0; y--) {
-            let isFullRow = true;
-            for (let x = 0; x < BOARD_WIDTH; x++) {
-                const index = y * BOARD_WIDTH + x;
-                if (!this.cells[index]) {
-                    isFullRow = false;
-                    break;
-                }
-            }
-
-            if (isFullRow) {
-                // Hapus baris
-                this.cells.splice(y * BOARD_WIDTH, BOARD_WIDTH);
-                // Tambah baris kosong di atas
-                this.cells.unshift(...Array(BOARD_WIDTH).fill(0));
-                
-                linesCleared++;
-                this.updateScore(linesCleared);
-                
-                // Redraw papan
-                this.updateBoard();
-            }
-        }
-    }
-
-    // Memperbarui Papan
-    updateBoard() {
-        for (let i = 0; i < BOARD_SIZE; i++) {
-            const cell = this.board.children[i];
-            cell.classList.remove('tetromino', ...Object.values(TETROMINOS).map(t => t.color));
-            if (this.cells[i]) {
-                cell.classList.add('tetromino');
-            }
-        }
-        this.drawTetromino();
-    }
-
-    // Membuat Tetromino Baru
-    spawnTetromino() {
-        this.currentTetromino = this.getRandomTetromino();
-        this.currentPosition = Math.floor(BOARD_WIDTH / 2) - Math.floor(this.currentTetromino.shape.length / 2);
-
-        // Periksa game over
-        if (this.checkCollision()) {
-            this.endGame();
-            return;
-        }
-
-        this.drawTetromino();
-    }
-
-    // Memperbarui Skor
-    updateScore(linesCleared) {
-        const scoreMultipliers = [0, 40, 100, 300, 1200];
-        this.score += scoreMultipliers[linesCleared] * this.level;
-        this.scoreElement.textContent = this.score;
-
-        // Naikkan level
-        if (this.score >= this.level * 1000) {
-            this.level++;
-            this.increaseGameSpeed();
-        }
-    }
-
-    // Meningkatkan Kecepatan Permainan
-    increaseGameSpeed() {
-        this.gameSpeed = Math.max(100, this.gameSpeed - GAME_SPEEDS.speedReduction);
-        this.stopGameLoop();
-        this.startGameLoop();
-    }
-
-    // Memulai Game Loop
-    startGameLoop() {
-        this.gameLoopInterval = setInterval(() => {
-            if (!this.gameOver && !this.isPaused) {
-                this.moveTetromino('down');
-            }
-        }, this.gameSpeed);
-    }
-
-    // Menghentikan Game Loop
-    stopGameLoop() {
-        clearInterval(this.gameLoopInterval);
-    }
-
-    // Memulai Permainan
-    startGame() {
-        this.initializeBoard();
-        this.score = 0;
-        this.level = 1;
-        this.gameOver = false;
-        this.isPaused = false;
-        this.scoreElement.textContent = this.score;
-        
-        this.spawnTetromino();
-        this.startGameLoop();
-        
-        // Tambahkan event listener
-        document.addEventListener('keydown', this.handleKeyPress);
-    }
-
-    // Menjeda Permainan
-    pauseGame() {
-        this.isPaused = !this.isPaused;
-        if (this.isPaused) {
-            this.stopGameLoop();
+  }
+  displayGrid(pg, x, y, w, h, pallette) {
+    var nx = this.tGrid.nx;
+    var ny = this.tGrid.ny;
+    var cw = w / nx;
+    var ch = h / ny;
+    // BG
+    for (var gy = 0; gy < ny; gy++) {
+      for (var gx = 0; gx < nx; gx++) {
+        var cx = x + gx * cw;
+        var cy = y + gy * ch;
+        pg.stroke(44);
+        if ((gx & 1) == 1) {
+          pg.fill(66);
         } else {
-            this.startGameLoop();
+          pg.fill(77);
         }
+        pg.rect(cx, cy, cw, ch);
+      }
     }
-
-    // Mengakhiri Permainan
-    endGame() {
-        this.gameOver = true;
-        this.stopGameLoop();
-        document.removeEventListener('keydown', this.handleKeyPress);
-        
-        // Tambahkan efek game over
-        this.board.classList.add('game-over');
-        alert(`Game Over! Skor Anda: ${this.score}`);
-    }
-
-    // Menangani Input Keyboard
-    handleKeyPress(event) {
-        if (this.gameOver || this.isPaused) return;
-
-        switch(event.key) {
-            case 'ArrowLeft':
-                this.moveTetromino('left');
-                break;
-            case 'ArrowRight':
-                this.moveTetromino('right');
-                break;
-            case 'ArrowDown':
-                this.moveTetromino('down');
-                break;
-            case 'ArrowUp':
-                this.rotateTetromino();
-                break;
-            case 'Escape':
-                this.pauseGame();
-                break;
+    // FG
+    for (var gy = 0; gy < ny; gy++) {
+      for (var gx = 0; gx < nx; gx++) {
+        var cx = x + gx * cw;
+        var cy = y + gy * ch;
+        var valGrid = this.tGrid.getGridVal(gx, gy);
+        if (valGrid > 0) {
+          pg.stroke(0);
+          var rgb = pallette[valGrid % pallette.length];
+          pg.fill(rgb[0], rgb[1], rgb[2]);
+          pg.rect(cx, cy, cw, ch);
         }
+      }
     }
+    // Shape
+    var ks = this.tGrid.shapeSize;
+    var kr = ceil(this.tGrid.shapeSize / 2.0);
+    for (var ky = 0; ky < ks; ky++) {
+      for (var kx = 0; kx < ks; kx++) {
+        var gx = this.tGrid.sx + kx - kr;
+        var gy = this.tGrid.sy + ky - kr;
+        var cx = x + gx * cw;
+        var cy = y + gy * ch;
+        var valShape = this.tGrid.getShapeVal(kx, ky);
+        if (valShape != 0) {
+          pg.stroke(0);
+          var rgb = pallette[valShape % pallette.length];
+          pg.fill(rgb[0], rgb[1], rgb[2]);
+          pg.rect(cx, cy, cw, ch);
+        }
+      }
+    }
+  }
+  displayNextShape(pg, x, y, w, h) {
+    var shape = this.shapeNext;
+    var shapeSize = parseInt(sqrt(shape.length));
+    var ks = shapeSize;
+    var kr = shapeSize / 2.0;
+    var cw = min(w / 5.0, h / 5.0);
+    var ch = cw;
+    for (var ky = 0; ky < ks; ky++) {
+      for (var kx = 0; kx < ks; kx++) {
+        var gx = kx - kr;
+        var gy = ky - kr;
+        var cx = x + gx * cw + w / 2.0;
+        var cy = y + gy * ch + h / 2.0;
+        cx = parseInt(cx);
+        cy = parseInt(cy);
+        var valShape = shape[ky * shapeSize + kx];
+        if (valShape != 0) {
+          pg.fill(200);
+        } else {
+          pg.fill(32);
+        }
+        pg.stroke(64);
+        pg.rect(cx, cy, cw, ch);
+      }
+    }
+  }
 }
 
-// Fungsi Inisialisasi
-function initializeTetrisGame() {
-    const board = document.getElementById('tetris-board');
-    const scoreElement = document.getElementById('score');
-    const tetrisGame = new TetrisGame(board, scoreElement);
-
-    // Tombol Kontrol
-    document.getElementById('start-btn').addEventListener('click', () => tetrisGame.startGame());
-    document.getElementById('pause-btn').addEventListener('click', () => tetrisGame.pauseGame());
-    
-    // Kontrol Mobile
-    document.getElementById('move-left').addEventListener('click', () => tetrisGame.moveTetromino('left'));
-    document.getElementById('move-right').addEventListener('click', () => tetrisGame.moveTetromino('right'));
-    document.getElementById('move-down').addEventListener('click', () => tetrisGame.moveTetromino('down'));
-    document.getElementById('rotate').addEventListener('click', () => tetrisGame.rotateTetromino());
+class Timer {
+  constructor() {
+    this.duration = 600;
+    this.time = 0;
+  }
+  reset(duration) {
+    this.setTime();
+    this.duration = duration;
+  }
+  setTime() {
+    this.time = millis();
+  }
+  getTime() {
+    return millis() - this.time;
+  }
+  updateStep() {
+    if (this.getTime() >= this.duration) {
+      this.setTime();
+      return true;
+    }
+    return false;
+  }
 }
 
-// Inisialisasi saat DOM siap
-document.addEventListener('DOMContentLoaded', initializeTetrisGame);
+class TGrid {
+  constructor(nx, ny) {
+    this.nx = nx;
+    this.ny = ny;
+    this.grid = [];
+    this.grid.length = nx * ny;
+    this.clearGrid();
+    this.setShape([0]);
+  }
+  clearGrid() {
+    for (var i = 0; i < this.grid.length; i++) {
+      this.grid[i] = 0;
+    }
+  }
+  isInsideGrid(x, y) {
+    return x >= 0 && x < this.nx && y >= 0 && y < this.ny;
+  }
+  setShape(shape) {
+    this.shape = shape;
+    this.shapeSize = parseInt(sqrt(shape.length));
+    this.sx = ceil(this.nx / 2);
+    this.sy = ceil(this.shapeSize / 2);
+  }
+  getGridVal(x, y) {
+    if (!this.isInsideGrid(x, y)) {
+      return -1;
+    } else {
+      return this.grid[y * this.nx + x];
+    }
+  }
+  setGridVal(x, y, val) {
+    this.grid[y * this.nx + x] = val;
+  }
+  getShapeVal(x, y) {
+    return this.shape[y * this.shapeSize + x];
+  }
+  rotateShapeDir(CW) {
+    var size = this.shapeSize;
+    var cpy = this.shape.slice(0);
+    if (CW) {
+      var ib = 0,
+        ia = size * size;
+      for (var y = 1; y <= size; y++, ia++) {
+        for (var x = 1; x <= size; x++, ib++) {
+          this.shape[ib] = cpy[ia - x * size];
+        }
+      }
+    } else {
+      var ib = 0,
+        ia = -1;
+      for (var y = 1; y <= size; y++, ia--) {
+        for (var x = 1; x <= size; x++, ib++) {
+          this.shape[ib] = cpy[ia + x * size];
+        }
+      }
+    }
+  }
+  rotateShape() {
+    this.rotateShapeDir(true);
+    if (this.collision(0, 0)) {
+      this.rotateShapeDir(false);
+    }
+  }
+
+  collision(tx, ty) {
+    var ks = this.shapeSize;
+    var kr = ceil(this.shapeSize / 2);
+    for (var ky = 0; ky < ks; ky++) {
+      for (var kx = 0; kx < ks; kx++) {
+        var px = this.sx + kx - kr + tx;
+        var py = this.sy + ky - kr + ty;
+        var valGrid = this.getGridVal(px, py);
+        var valShape = this.getShapeVal(kx, ky);
+        if (valGrid * valShape != 0) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+  updateRows() {
+    var rows = 0;
+    for (var gy = 0; gy < this.ny; gy++) {
+      var rowCompleted = true;
+      for (var gx = 0; gx < this.nx; gx++) {
+        var gi = gy * this.nx + gx;
+        if (this.grid[gi] == 0) rowCompleted = false;
+      }
+      if (rowCompleted) {
+        this.grid.copyWithin(this.nx, 0, gy * this.nx);
+        rows++;
+      }
+    }
+    if (rows > 0) {
+      for (var gx = 0; gx < this.nx; gx++) {
+        this.grid[gx] = 0;
+      }
+    }
+    return rows;
+  }
+  splatShape() {
+    let ks = this.shapeSize;
+    let kr = ceil(this.shapeSize / 2);
+    for (let ky = 0; ky < ks; ky++) {
+      for (let kx = 0; kx < ks; kx++) {
+        let px = this.sx + kx - kr;
+        let py = this.sy + ky - kr;
+        let valShape = this.getShapeVal(kx, ky);
+        if (valShape != 0) {
+          this.setGridVal(px, py, valShape);
+        }
+      }
+    }
+  }
+}
