@@ -1,108 +1,77 @@
-// Mendapatkan elemen Canvas
+// Canvas Tetris
 const canvas = document.getElementById('tetris');
 const context = canvas.getContext('2d');
-
-// Skala canvas agar kotak grid mudah digambar
 context.scale(30, 30);
 
-// Bentuk Tetrimino
-const SHAPES = {
-    'I': [[1, 1, 1, 1]],
-    'J': [[0, 1, 0], [0, 1, 0], [1, 1, 0]],
-    'L': [[0, 1, 0], [0, 1, 0], [0, 1, 1]],
-    'O': [[1, 1], [1, 1]],
-    'S': [[0, 1, 1], [1, 1, 0]],
-    'T': [[0, 1, 0], [1, 1, 1]],
-    'Z': [[1, 1, 0], [0, 1, 1]]
-};
+// Warna untuk setiap Tetrimino
+const COLORS = [
+    null, 'cyan', 'blue', 'orange', 'yellow', 'green', 'purple', 'red'
+];
 
-// Membuat tetrimino secara acak
-function createPiece(type) {
-    return SHAPES[type];
+// Bentuk Tetrimino
+const SHAPES = [
+    null,
+    [[1, 1, 1, 1]],          // I
+    [[0, 1, 0], [0, 1, 0], [1, 1, 0]], // J
+    [[0, 1, 0], [0, 1, 0], [0, 1, 1]], // L
+    [[1, 1], [1, 1]],        // O
+    [[0, 1, 1], [1, 1, 0]],  // S
+    [[0, 1, 0], [1, 1, 1]],  // T
+    [[1, 1, 0], [0, 1, 1]]   // Z
+];
+
+// Membuat Matrix (arena permainan)
+function createMatrix(w, h) {
+    const matrix = [];
+    while (h--) matrix.push(new Array(w).fill(0));
+    return matrix;
 }
 
-// Menggambar Tetrimino
+// Menggambar Matrix ke Canvas
 function drawMatrix(matrix, offset) {
     matrix.forEach((row, y) => {
         row.forEach((value, x) => {
             if (value !== 0) {
-                context.fillStyle = 'cyan';
+                context.fillStyle = COLORS[value];
                 context.fillRect(x + offset.x, y + offset.y, 1, 1);
-                context.strokeStyle = '#333';
+                context.strokeStyle = '#111';
                 context.strokeRect(x + offset.x, y + offset.y, 1, 1);
             }
         });
     });
 }
 
-// Bersihkan layar dan gambar ulang
+// Bersihkan dan gambar ulang
 function draw() {
     context.fillStyle = '#000';
     context.fillRect(0, 0, canvas.width, canvas.height);
-
     drawMatrix(arena, { x: 0, y: 0 });
     drawMatrix(player.matrix, player.pos);
 }
 
-// Mengecek benturan
-function collide(arena, player) {
-    const [m, o] = [player.matrix, player.pos];
-    for (let y = 0; y < m.length; ++y) {
-        for (let x = 0; x < m[y].length; ++x) {
-            if (m[y][x] !== 0 && (arena[y + o.y] && arena[y + o.y][x + o.x]) !== 0) {
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
-// Membuat arena/board
-function createMatrix(w, h) {
-    const matrix = [];
-    while (h--) {
-        matrix.push(new Array(w).fill(0));
-    }
-    return matrix;
+// Membuat Tetrimino
+function createPiece(type) {
+    const index = 'IJLOSTZ'.indexOf(type);
+    return SHAPES[index + 1];
 }
 
 // Gabungkan tetrimino dengan arena
 function merge(arena, player) {
     player.matrix.forEach((row, y) => {
         row.forEach((value, x) => {
-            if (value !== 0) {
-                arena[y + player.pos.y][x + player.pos.x] = value;
-            }
+            if (value !== 0) arena[y + player.pos.y][x + player.pos.x] = value;
         });
     });
 }
 
-// Menghapus baris penuh
-function arenaSweep() {
-    outer: for (let y = arena.length - 1; y >= 0; --y) {
-        for (let x = 0; x < arena[y].length; ++x) {
-            if (arena[y][x] === 0) {
-                continue outer;
-            }
-        }
-        arena.splice(y, 1);
-        arena.unshift(new Array(arena[0].length).fill(0));
-    }
+// Mengecek benturan
+function collide(arena, player) {
+    const [m, o] = [player.matrix, player.pos];
+    return m.some((row, y) =>
+        row.some((value, x) => value !== 0 && (arena[y + o.y] && arena[y + o.y][x + o.x]) !== 0));
 }
 
-// Menggerakkan tetrimino turun
-function playerDrop() {
-    player.pos.y++;
-    if (collide(arena, player)) {
-        player.pos.y--;
-        merge(arena, player);
-        playerReset();
-        arenaSweep();
-    }
-    dropCounter = 0;
-}
-
-// Reset posisi pemain
+// Reset posisi tetrimino
 function playerReset() {
     const pieces = 'IJLOSTZ';
     player.matrix = createPiece(pieces[Math.floor(Math.random() * pieces.length)]);
@@ -110,64 +79,62 @@ function playerReset() {
     player.pos.x = Math.floor(arena[0].length / 2) - Math.floor(player.matrix[0].length / 2);
     if (collide(arena, player)) {
         arena.forEach(row => row.fill(0));
-        alert("Game Over!");
+        alert('Game Over!');
     }
 }
 
-// Kontrol pergerakan pemain
+// Kontrol tetrimino
 function playerMove(dir) {
     player.pos.x += dir;
-    if (collide(arena, player)) {
-        player.pos.x -= dir;
-    }
+    if (collide(arena, player)) player.pos.x -= dir;
 }
 
-// Rotasi tetrimino
+function playerDrop() {
+    player.pos.y++;
+    if (collide(arena, player)) {
+        player.pos.y--;
+        merge(arena, player);
+        playerReset();
+    }
+    dropCounter = 0;
+}
+
 function playerRotate() {
-    const matrix = player.matrix;
-    const rotated = matrix[0].map((_, i) => matrix.map(row => row[i]).reverse());
+    const rotated = player.matrix[0].map((_, i) => player.matrix.map(row => row[i]).reverse());
     player.matrix = rotated;
-
-    if (collide(arena, player)) {
-        player.matrix = matrix; // Batalkan rotasi jika bertabrakan
-    }
+    if (collide(arena, player)) player.matrix = player.matrix.reverse();
 }
 
-let dropCounter = 0;
-let dropInterval = 1000;
+// Arena permainan
+const arena = createMatrix(10, 20);
+const player = { pos: { x: 0, y: 0 }, matrix: null };
+playerReset();
 
+let dropCounter = 0, dropInterval = 1000;
 let lastTime = 0;
+
 function update(time = 0) {
     const deltaTime = time - lastTime;
     lastTime = time;
 
     dropCounter += deltaTime;
-    if (dropCounter > dropInterval) {
-        playerDrop();
-    }
+    if (dropCounter > dropInterval) playerDrop();
 
     draw();
     requestAnimationFrame(update);
 }
 
-// Event Listener untuk kontrol
-document.addEventListener('keydown', event => {
-    if (event.key === 'ArrowLeft') {
-        playerMove(-1);
-    } else if (event.key === 'ArrowRight') {
-        playerMove(1);
-    } else if (event.key === 'ArrowDown') {
-        playerDrop();
-    } else if (event.key === 'ArrowUp') {
-        playerRotate();
-    }
+document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft') playerMove(-1);
+    if (e.key === 'ArrowRight') playerMove(1);
+    if (e.key === 'ArrowDown') playerDrop();
+    if (e.key === 'ArrowUp') playerRotate();
 });
 
-const arena = createMatrix(10, 20);
-const player = {
-    pos: { x: 0, y: 0 },
-    matrix: null,
-};
+// Kontrol Touchscreen
+document.getElementById('left').addEventListener('click', () => playerMove(-1));
+document.getElementById('right').addEventListener('click', () => playerMove(1));
+document.getElementById('down').addEventListener('click', playerDrop);
+document.getElementById('rotate').addEventListener('click', playerRotate);
 
-playerReset();
 update();
