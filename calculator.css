@@ -1,0 +1,61 @@
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f4f8; /* Light background color */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+    margin: 0;
+}
+
+.calculator-container {
+    background-color: #ffffff; /* White background for the calculator */
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 300px; /* Fixed width for the calculator */
+}
+
+h2 {
+    text-align: center;
+    color: #4a90e2; /* Blue color for the title */
+    margin-bottom: 20px;
+}
+
+.result-display {
+    width: 100%;
+    height: 50px; /* Height of the display */
+    font-size: 24px; /* Font size for the display */
+    text-align: right; /* Align text to the right */
+    padding: 10px;
+    border: 1px solid #ddd; /* Light border */
+    border-radius: 5px;
+    margin-bottom: 20px; /* Space below the display */
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 columns for buttons */
+    gap: 10px; /* Space between buttons */
+}
+
+button {
+    padding: 20px;
+    font-size: 18px; /* Font size for buttons */
+    border: none;
+    border-radius: 5px;
+    background-color: #4a90e2; /* Blue background for buttons */
+    color: white; /* White text color */
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s; /* Transition effects */
+}
+
+button:hover {
+    background-color: #007BFF; /* Darker blue on hover */
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+button:active {
+    transform: scale(0.95); /* Slight
