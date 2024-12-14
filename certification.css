@@ -2,36 +2,39 @@
 body {
     font-family: 'Arial', sans-serif;
     background-color: #f0f4f8; /* Light background color */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    height: 100vh; /* Full viewport height */
     margin: 0;
+    padding: 20px; /* Add padding to the body */
 }
 
 .certificates-container {
     background-color: #ffffff; /* White background for the certificates container */
     border-radius: 10px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    padding: 30px;
-    width: 80%; /* Responsive width */
-    max-width: 800px; /* Max width for larger screens */
-    text-align: center;
+    padding: 20px;
+    max-width: 1200px; /* Max width for larger screens */
+    margin: auto; /* Center the container */
+    display: flex; /* Use flexbox for layout */
+    flex-wrap: wrap; /* Allow wrapping of items */
+    justify-content: center; /* Center items */
 }
 
 h1 {
     color: #4a90e2; /* Blue color for the title */
+    text-align: center; /* Center the title */
+    width: 100%; /* Full width for the title */
     margin-bottom: 20px;
 }
 
 .certificate {
-    margin-bottom: 20px; /* Space between certificates */
+    margin: 10px; /* Space between certificates */
     border: 1px solid #ddd; /* Light border */
     border-radius: 8px;
     padding: 15px;
     background-color: #f9f9f9; /* Light background for each certificate */
     transition: transform 0.3s; /* Transition for hover effect */
+    flex: 1 1 300px; /* Flex-grow, flex-shrink, and base width */
+    max-width: 300px; /* Max width for each certificate */
+    text-align: center; /* Center text in certificates */
 }
 
 .certificate:hover {
@@ -52,4 +55,28 @@ h2 {
 p {
     color: #666; /* Gray text color for descriptions */
     font-size: 14px; /* Font size for descriptions */
+}
+
+/* Responsive Styles */
+@media (max-width: 600px) {
+    .certificates-container {
+        padding: 10px; /* Reduce padding on smaller screens */
+    }
+
+    .certificate {
+        margin: 5px; /* Reduce margin on smaller screens */
+        padding: 10px; /* Reduce padding on smaller screens */
+    }
+
+    h1 {
+        font-size: 24px; /* Adjust title size for smaller screens */
+    }
+
+    h2 {
+        font-size: 18px; /* Adjust subtitle size for smaller screens */
+    }
+
+    p {
+        font-size: 12px; /* Adjust description size for smaller screens */
+    }
 }
