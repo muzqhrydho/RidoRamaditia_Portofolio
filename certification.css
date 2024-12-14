@@ -1,0 +1,68 @@
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f4f8; /* Light background color */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+    margin: 0;
+}
+
+.upload-container {
+    background-color: #ffffff; /* White background for the upload form */
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    width: 400px; /* Fixed width for the upload form */
+    text-align: center;
+}
+
+h1 {
+    color: #4a90e2; /* Blue color for the title */
+    margin-bottom: 20px;
+}
+
+.input-group {
+    margin-bottom: 20px; /* Space between input groups */
+    text-align: left; /* Align labels to the left */
+}
+
+label {
+    display: block; /* Make labels block elements */
+    margin-bottom: 5px; /* Space below labels */
+    color: #333; /* Dark text color */
+}
+
+input[type="file"] {
+    width: 100%; /* Full width for file inputs */
+    padding: 10px;
+    border: 1px solid #ddd; /* Light border */
+    border-radius: 5px;
+    background-color: #f9f9f9; /* Light background for inputs */
+    transition: border-color 0.3s; /* Transition for border color */
+}
+
+input[type="file"]:focus {
+    border-color: #4a90e2; /* Change border color on focus */
+}
+
+button {
+    padding: 10px 15px;
+    font-size: 16px; /* Font size for buttons */
+    border: none;
+    border-radius: 5px;
+    background-color: #4a90e2; /* Blue background for buttons */
+    color: white; /* White text color */
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s; /* Transition effects */
+}
+
+button:hover {
+    background-color: #007BFF; /* Darker blue on hover */
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+button:active {
+    transform: scale(0.95); /* Slightly shrink on click */
+}
