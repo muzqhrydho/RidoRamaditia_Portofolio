@@ -1,77 +1,155 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<style>
-table, th, td {
-  border: 1px solid black;
-  border-collapse: collapse;
-}
-th, td {
-  padding: 5px;
-  text-align: left;
-}
-.container {
-  display: flex;
-  justify-content: space-between;
-}
-.chart {
-  width: 600px;
-  height: 400px;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Penjualan Elegan</title>
+    <!-- Menambahkan Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Menambahkan Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7fc;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: #333;
+            font-size: 2rem;
+            margin: 20px 0;
+        }
+        .chart-container {
+            position: relative;
+            width: 80%;
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        canvas {
+            padding: 10px;
+        }
+    </style>
 </head>
 <body>
+    <h1>Laporan Penjualan 2022 vs 2023</h1>
+    <div class="chart-container">
+        <canvas id="salesChart"></canvas>
+    </div>
 
-<h2>Laporan Penjualan</h2>
+    <script>
+        // Data dari tabel
+        const labels = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        const data2022 = [4017, 6135, 7091, 5841, 5036, 4547, 3467, 3970, 6313, 3595, 9207, 5945];
+        const data2023 = [2416, 4136, 7935, 8004, 9505, 5026, 6108, 6343, 9404, 9280, 9287, 8689];
 
-<div class="container">
-<table style="width:50%">
-  <tr>
-    <th></th>
-    <th>Januari</th>
-    <th>Februari</th>
-    <th>Maret</th>
-    <th>April</th>
-    <th>Mei</th>
-    <th>Juni</th>
-    <th>Juli</th>
-    <th>Agustus</th>
-    <th>September</th>
-    <th>Oktober</th>
-    <th>November</th>
-    <th>Desember</th>
-  </tr>
-  <tr>
-    <td>2022</td>
-    <td>4.017</td>
-    <td>6.135</td>
-    <td>7.091</td>
-    <td>5.841</td>
-    <td>5.036</td>
-    <td>4.547</td>
-    <td>3.467</td>
-    <td>3.970</td>
-    <td>6.313</td>
-    <td>3.595</td>
-    <td>9.207</td>
-    <td>5.945</td>
-  </tr>
-  <tr>
-    <td>2023</td>
-    <td>2.416</td>
-    <td>4.136</td>
-    <td>7.935</td>
-    <td>8.004</td>
-    <td>9.505</td>
-    <td>5.026</td>
-    <td>6.108</td>
-    <td>6.343</td>
-    <td>9.404</td>
-    <td>9.280</td>
-    <td>9.287</td>
-    <td>8.689</td>
-  </tr>
-</table>
+        // Gradien warna
+        const ctx = document.getElementById('salesChart').getContext('2d');
+        const gradient2022 = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient2022.addColorStop(0, 'rgba(54, 162, 235, 0.9)');
+        gradient2022.addColorStop(1, 'rgba(54, 162, 235, 0.3)');
 
-<div class="chart">
-  <img src="https://i.imgur.com/w2l66nI.png" alt="Chart" height="40
+        const gradient2023 = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient2023.addColorStop(0, 'rgba(255, 99, 132, 0.9)');
+        gradient2023.addColorStop(1, 'rgba(255, 99, 132, 0.3)');
+
+        // Konfigurasi Chart.js dengan kustomisasi
+        const salesChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Tahun 2022',
+                        data: data2022,
+                        backgroundColor: gradient2022,
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1,
+                        hoverBackgroundColor: 'rgba(54, 162, 235, 1)',
+                        hoverBorderColor: 'rgba(54, 162, 235, 1)',
+                    },
+                    {
+                        label: 'Tahun 2023',
+                        data: data2023,
+                        backgroundColor: gradient2023,
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1,
+                        hoverBackgroundColor: 'rgba(255, 99, 132, 1)',
+                        hoverBorderColor: 'rgba(255, 99, 132, 1)',
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: {
+                            font: {
+                                size: 14,
+                                weight: 'bold',
+                            },
+                            color: '#333',
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Perbandingan Penjualan Tahunan',
+                        font: {
+                            size: 20,
+                            weight: 'bold',
+                        },
+                        color: '#333',
+                    },
+                    tooltip: {
+                        backgroundColor: '#333',
+                        titleColor: '#fff',
+                        bodyColor: '#fff',
+                        borderColor: '#ddd',
+                        borderWidth: 1,
+                        cornerRadius: 10,
+                        padding: 10,
+                        displayColors: true,
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(200, 200, 200, 0.3)',
+                        },
+                        ticks: {
+                            color: '#333',
+                            font: {
+                                size: 12,
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false,
+                        },
+                        ticks: {
+                            color: '#333',
+                            font: {
+                                size: 12,
+                            }
+                        }
+                    }
+                },
+                animation: {
+                    duration: 2000,
+                    easing: 'easeInOutBounce',
+                }
+            }
+        });
+    </script>
+</body>
+</html>
