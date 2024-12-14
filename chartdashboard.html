@@ -1,57 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Penjualan Elegan</title>
+    <title>Diagram Penjualan Tahunan</title>
     <!-- Menambahkan Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Menambahkan Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- CSS untuk gaya tambahan -->
     <style>
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f4f7fc;
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f4f7fc, #eef1f7);
             margin: 0;
-            padding: 0;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-        }
-        h1 {
-            color: #333;
-            font-size: 2rem;
-            margin: 20px 0;
+            height: 100vh;
         }
         .chart-container {
-            position: relative;
-            width: 80%;
-            max-width: 1000px;
-            margin: 30px auto;
+            width: 85%;
+            max-width: 1200px;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
-        canvas {
-            padding: 10px;
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            color: #333;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-    <h1>Laporan Penjualan 2022 vs 2023</h1>
     <div class="chart-container">
+        <h1>Laporan Penjualan 2022 vs 2023</h1>
         <canvas id="salesChart"></canvas>
     </div>
 
     <script>
-        // Data dari tabel
+        // Data Penjualan
         const labels = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
         const data2022 = [4017, 6135, 7091, 5841, 5036, 4547, 3467, 3970, 6313, 3595, 9207, 5945];
         const data2023 = [2416, 4136, 7935, 8004, 9505, 5026, 6108, 6343, 9404, 9280, 9287, 8689];
 
-        // Gradien warna
+        // Konteks Canvas
         const ctx = document.getElementById('salesChart').getContext('2d');
+
+        // Gradien Warna
         const gradient2022 = ctx.createLinearGradient(0, 0, 0, 400);
         gradient2022.addColorStop(0, 'rgba(54, 162, 235, 0.9)');
         gradient2022.addColorStop(1, 'rgba(54, 162, 235, 0.3)');
@@ -60,29 +59,29 @@
         gradient2023.addColorStop(0, 'rgba(255, 99, 132, 0.9)');
         gradient2023.addColorStop(1, 'rgba(255, 99, 132, 0.3)');
 
-        // Konfigurasi Chart.js dengan kustomisasi
+        // Konfigurasi Chart.js
         const salesChart = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: labels,
                 datasets: [
                     {
-                        label: 'Tahun 2022',
+                        label: 'Penjualan Tahun 2022',
                         data: data2022,
                         backgroundColor: gradient2022,
                         borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1,
-                        hoverBackgroundColor: 'rgba(54, 162, 235, 1)',
-                        hoverBorderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 2,
+                        barPercentage: 0.7,
+                        categoryPercentage: 0.8
                     },
                     {
-                        label: 'Tahun 2023',
+                        label: 'Penjualan Tahun 2023',
                         data: data2023,
                         backgroundColor: gradient2023,
                         borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 1,
-                        hoverBackgroundColor: 'rgba(255, 99, 132, 1)',
-                        hoverBorderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 2,
+                        barPercentage: 0.7,
+                        categoryPercentage: 0.8
                     }
                 ]
             },
@@ -91,62 +90,78 @@
                 maintainAspectRatio: false,
                 plugins: {
                     legend: {
+                        position: 'top',
                         labels: {
                             font: {
                                 size: 14,
-                                weight: 'bold',
+                                weight: 'bold'
                             },
-                            color: '#333',
+                            color: '#444'
                         }
                     },
                     title: {
                         display: true,
-                        text: 'Perbandingan Penjualan Tahunan',
+                        text: 'Perbandingan Penjualan Tahun 2022 dan 2023',
                         font: {
-                            size: 20,
-                            weight: 'bold',
+                            size: 18,
+                            weight: 'bold'
                         },
-                        color: '#333',
+                        color: '#444'
                     },
                     tooltip: {
-                        backgroundColor: '#333',
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.dataset.label}: ${context.parsed.y.toLocaleString()} unit`;
+                            }
+                        },
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
                         titleColor: '#fff',
                         bodyColor: '#fff',
                         borderColor: '#ddd',
                         borderWidth: 1,
                         cornerRadius: 10,
-                        padding: 10,
-                        displayColors: true,
+                        padding: 12
+                    },
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'top',
+                        formatter: (value) => value.toLocaleString(),
+                        font: {
+                            weight: 'bold'
+                        }
                     }
                 },
                 scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: {
-                            color: 'rgba(200, 200, 200, 0.3)',
-                        },
+                    x: {
                         ticks: {
-                            color: '#333',
+                            color: '#444',
                             font: {
-                                size: 12,
+                                size: 12
                             }
+                        },
+                        grid: {
+                            display: false
                         }
                     },
-                    x: {
-                        grid: {
-                            display: false,
-                        },
+                    y: {
+                        beginAtZero: true,
                         ticks: {
-                            color: '#333',
+                            color: '#444',
                             font: {
-                                size: 12,
+                                size: 12
+                            },
+                            callback: function(value) {
+                                return value.toLocaleString();
                             }
+                        },
+                        grid: {
+                            color: 'rgba(200, 200, 200, 0.3)'
                         }
                     }
                 },
                 animation: {
-                    duration: 2000,
-                    easing: 'easeInOutBounce',
+                    duration: 3000,
+                    easing: 'easeInOutQuart'
                 }
             }
         });
