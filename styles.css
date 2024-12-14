@@ -1,6 +1,10 @@
 * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box; /* Added for better box model handling */
+}
+
+body {
     font-family: sans-serif;
 }
 
@@ -13,6 +17,7 @@
 
 nav {
     display: flex;
+    flex-wrap: wrap; /* Allow items to wrap on smaller screens */
     width: 84%;
     margin: auto;
     padding: 20px 0;
@@ -25,8 +30,12 @@ nav {
     cursor: pointer;
 }
 
+nav ul {
+    display: flex; /* Use flexbox for navigation */
+    flex-wrap: wrap; /* Allow wrapping */
+}
+
 nav ul li {
-    display: inline-block;
     list-style: none;
     margin: 10px 20px;
 }
@@ -78,88 +87,3 @@ span {
     position: absolute;
     bottom: 0;
     right: 100px;
-}
-
-.images img {
-    height: 100%;
-    position: absolute;
-    left: 50%;
-    bottom: 0;
-    transform: translateX(-50%);
-    transition: bottom 1s, left 1s;
-}
-
-.images:hover .shape {
-    bottom: 40px;
-}
-
-.images:hover .girl {
-    left: 45%;
-}
-
-.social {
-    margin-left: 8%;
-    margin-top: 100px;
-}
-
-.social a {
-    font-size: 30px;
-    color: #212121;
-    margin-right: 20px;
-}
-
-.social a:hover {
-    color: orange;
-}
-
-/* New Styles for Projects Section */
-#projects {
-    background: #f9f9f9; /* Light background for contrast */
-    padding: 50px 0; /* Padding for spacing */
-    text-align: center; /* Center align text */
-}
-
-#projects h2 {
-    font-size: 36px;
-    color: #212121;
-    margin-bottom: 30px;
-}
-
-#projects ul {
-    list-style: none; /* Remove default list styling */
-    padding: 0; /* Remove padding */
-}
-
-#projects li {
-    background: #fff; /* White background for project items */
-    border: 1px solid #ddd; /* Light border */
-    border-radius: 8px; /* Rounded corners */
-    padding: 20px; /* Padding for content */
-    margin: 15px 0; /* Margin between items */
-    transition: box-shadow 0.3s; /* Smooth shadow transition */
-}
-
-#projects li:hover {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Shadow effect on hover */
-}
-
-#projects h3 {
-    font-size: 24px; /* Font size for project titles */
-    color: #333; /* Darker color for titles */
-    margin-bottom: 10px; /* Space below title */
-}
-
-#projects p {
-    color: #666; /* Gray color for descriptions */
-    margin-bottom: 15px; /* Space below description */
-}
-
-#projects a {
-    text-decoration: none; /* Remove underline */
-    color: #007BFF; /* Bootstrap primary color */
-    font-weight: bold; /* Bold text */
-}
-
-#projects a:hover {
-    text-decoration: underline; /* Underline on hover */
-}
