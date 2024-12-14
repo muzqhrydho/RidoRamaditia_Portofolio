@@ -4,32 +4,32 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personle Portfolio Website</title>
+    <title>Personal Portfolio Website</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
     <div class="hero">
         <nav>
-            <img src="images/1.png" class="logo">
+            <img src="images/1.png" class="logo" alt="Logo">
             <ul>
                 <li><a href="#">HOME</a></li>
-                <li><a href="">ABOUT</a></li>
+                <li><a href="#">ABOUT</a></li>
                 <li><a href="#">PORTFOLIO</a></li>
                 <li><a href="#">CERTIFICATION</a></li>
-                <li><a href="#">HIRE ME</a></li>
+                <li><a href="#projects">PROJECT</a></li> <!-- Updated link to point to the projects section -->
             </ul>
         </nav>
          
         <div class="detel">
-            <h1>I,M Rido <span>Ramaditia</span></h1>
+            <h1>I'M Rido <span>Ramaditia</span></h1>
             <p>This is my official Portfolio website to showcase my 
-                all works related to <br> web development and ui design. </p>
-            <a href="#">Downdload CV</a>
+                all works related to <br> web development and UI design.</p>
+            <a href="#">Download CV</a>
         </div>
         <div class="images">
-            <img src="images/shape.png" class="shape">
-            <img src="images/PAS.png" class="PAS">
+            <img src="images/shape.png" class="shape" alt="Shape">
+            <img src="images/PAS.png" class="PAS" alt="PAS">
         </div>
 
         <div class="social">
@@ -38,5 +38,32 @@
                <i class="fab fa-instagram"></i></a>
         </div>
     </div>
+
+    <!-- New Projects Section -->
+    <section id="projects">
+        <h2>My Projects</h2>
+        <ul>
+            <li>
+                <h3>Login Form</h3>
+                <p>A simple login form built with HTML, CSS, and JavaScript.</p>
+                <a href="login-form.html">View Project</a>
+            </li>
+            <li>
+                <h3>Calculator</h3>
+                <p>A basic calculator application using HTML, CSS, and JavaScript.</p>
+                <a href="calculator.html">View Project</a>
+            </li>
+            <li>
+                <h3>Tetris Game</h3>
+                <p>A fun Tetris game created with HTML5 Canvas and JavaScript.</p>
+                <a href="tetris-game.html">View Project</a>
+            </li>
+            <li>
+                <h3>Sales Dashboard</h3>
+                <p>A dashboard displaying annual sales data using charts.</p>
+                <a href="sales-dashboard.html">View Project</a>
+            </li>
+        </ul>
+    </section>
 </body>
 </html>
