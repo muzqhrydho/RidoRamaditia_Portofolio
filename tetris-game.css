@@ -1,108 +1,151 @@
-/* Reset untuk menghindari style bawaan */
+/* Variabel Warna */
+:root {
+    --background-primary: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    --board-background: rgba(255, 255, 255, 0.7);
+    --cell-background: rgba(230, 230, 250, 0.5);
+    --border-color: rgba(200, 200, 220, 0.3);
+    
+    /* Warna Tetromino */
+    --tetromino-I: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+    --tetromino-O: linear-gradient(135deg, #ffd700 0%, #ffa500 100%);
+    --tetromino-T: linear-gradient(135deg, #ff6b6b 0%, #a8edea 100%);
+    --tetromino-L: linear-gradient(135deg, #ff8008 0%, #ffc837 100%);
+    --tetromino-J: linear-gradient(135deg, #4568dc 0%, #b06ab3 100%);
+    --tetromino-S: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    --tetromino-Z: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+}
+
+/* Reset dan Base */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Courier New', monospace;
 }
 
-/* Styling Halaman */
 body {
-    font-family: 'Roboto', sans-serif;
+    background: var(--background-primary);
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background: linear-gradient(135deg, #0f1b2b, #1f3d53);
-    color: #fff;
+    min-height: 100vh;
     overflow: hidden;
-    text-align: center;
+    perspective: 1000px;
 }
 
-/* Judul Game */
-h1 {
-    font-size: 3rem;
-    margin-bottom: 20px;
-    color: #00c9d1;
-    text-shadow: 0 0 15px rgba(0, 201, 209, 0.6);
-}
-
-/* Skor */
-#score {
-    font-size: 1.8rem;
-    color: #ff8c00;
-    margin-bottom: 30px;
-    font-weight: bold;
-    text-shadow: 0 0 10px rgba(255, 140, 0, 0.8);
-}
-
-/* Canvas Tetris */
-canvas {
-    background-color: #222;
-    border: 5px solid #00c9d1;
-    box-shadow: 0 0 20px rgba(0, 201, 209, 0.7);
-    transition: transform 0.3s ease;
-}
-
-/* Animasi saat ukuran canvas berubah */
-canvas:hover {
-    transform: scale(1.05);
-}
-
-/* Tombol Kontrol */
-.controls {
+/* Kontainer Game */
+.game-container {
+    background: var(--board-background);
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+    padding: 30px;
     display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 20px;
-    flex-wrap: wrap;
+    align-items: center;
+    backdrop-filter: blur(15px);
     transition: all 0.3s ease;
 }
 
-.button {
-    background-color: #00c9d1;
-    color: #222;
-    border: none;
-    padding: 20px;
-    font-size: 1.4rem;
-    font-weight: 600;
+/* Papan Tetris */
+.tetris-board {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    background-color: rgba(200, 200, 220, 0.2);
     border-radius: 10px;
-    box-shadow: 0px 5px 15px rgba(0, 201, 209, 0.6);
+    overflow: hidden;
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Sel */
+.cell {
+    aspect-ratio: 1 / 1;
+    border: 1px solid var(--border-color);
+    background-color: var(--cell-background);
+    transition: all 0.2s ease;
+}
+
+/* Tetromino */
+.tetromino {
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Warna Spesifik Tetromino */
+.tetromino-I { background: var(--tetromino-I); }
+.tetromino-O { background: var(--tetromino-O); }
+.tetromino-T { background: var(--tetromino-T); }
+.tetromino-L { background: var(--tetromino-L); }
+.tetromino-J { background: var(--tetromino-J); }
+.tetromino-S { background: var(--tetromino-S); }
+.tetromino-Z { background: var(--tetromino-Z); }
+
+/* Tombol Kontrol */
+.control-button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 10px;
+    margin: 5px;
     cursor: pointer;
-    transition: transform 0.3s, box-shadow 0.3s;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 1px;
 }
 
-.button:active {
+.control-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.control-button:active {
     transform: scale(0.95);
-    box-shadow: 0px 3px 10px rgba(0, 201, 209, 0.5);
 }
 
-.button:hover {
-    background-color: #00a3b4;
-    box-shadow: 0px 8px 20px rgba(0, 201, 209, 0.8);
+/* Panel Skor */
+.score-panel {
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    margin-left: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
-/* Responsif untuk Mobile */
-@media (max-width: 768px) {
-    h1 {
-        font-size: 2rem;
-    }
+.score {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #4a4a4a;
+    margin-bottom: 20px;
+}
 
-    canvas {
-        width: 90vw;
-        height: 180vw;
-    }
-
-    #score {
-        font-size: 1.5rem;
-    }
-
-    .controls {
-        gap: 10px;
-    }
-
-    .button {
+/* Responsivitas */
+@media screen and (max-width: 768px) {
+    .game-container {
+        flex-direction: column;
+        width: 90%;
         padding: 15px;
-        font-size: 1.2rem;
     }
+
+    .score-panel {
+        margin-left: 0;
+        margin-top: 20px;
+        width: 100%;
+    }
+}
+
+/* Animasi Game Over */
+@keyframes game-over-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.game-over {
+    animation: game-over-pulse 1s infinite;
+    background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+}
+
+/* Efek Hover Tambahan */
+.tetromino:hover {
+    filter: brightness(1.2);
 }
