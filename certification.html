@@ -4,32 +4,32 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Certificates</title>
+    <title>Display Certificates</title>
     <link rel="stylesheet" href="certification.css">
 </head>
 <body>
-    <div class="upload-container">
-        <h1>Upload Certificates</h1>
-        <form id="upload-form">
-            <div class="input-group">
-                <label for="certificate1">Certificate 1</label>
-                <input type="file" id="certificate1" name="certificate1" accept=".pdf,.jpg,.jpeg,.png" required>
-                <img src="sertifikat-html.jpg" alt="Sertifikat 1">
-            </div>
-            <div class="input-group">
-                <label for="certificate2">Certificate 2</label>
-                <input type="file" id="certificate2" name="certificate2" accept=".pdf,.jpg,.jpeg,.png" required>
-            </div>
-            <div class="input-group">
-                <label for="certificate3">Certificate 3</label>
-                <input type="file" id="certificate3" name="certificate3" accept=".pdf,.jpg,.jpeg,.png" required>
-            </div>
-            <div class="input-group">
-                <label for="certificate4">Certificate 4</label>
-                <input type="file" id="certificate4" name="certificate4" accept=".pdf,.jpg,.jpeg,.png" required>
-            </div>
-            <button type="submit">Upload Certificates</button>
-        </form>
+    <div class="certificates-container">
+        <h1>My Certificates</h1>
+        <div class="certificate">
+            <img src="sertifikat-html.jpg" alt="Certificate 1">
+            <h2>Certificate Title 1</h2>
+            <p>Description of Certificate 1.</p>
+        </div>
+        <div class="certificate">
+            <img src="certificate2.jpg" alt="Certificate 2">
+            <h2>Certificate Title 2</h2>
+            <p>Description of Certificate 2.</p>
+        </div>
+        <div class="certificate">
+            <img src="certificate3.jpg" alt="Certificate 3">
+            <h2>Certificate Title 3</h2>
+            <p>Description of Certificate 3.</p>
+        </div>
+        <div class="certificate">
+            <img src="certificate4.jpg" alt="Certificate 4">
+            <h2>Certificate Title 4</h2>
+            <p>Description of Certificate 4.</p>
+        </div>
     </div>
 </body>
 </html>
