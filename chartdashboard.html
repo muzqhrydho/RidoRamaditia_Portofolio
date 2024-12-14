@@ -1,78 +1,63 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<style>
-table {
-  font-family: arial, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
-}
-
-td, th {
-  border: 1px solid #dddddd;
-  text-align: left;
-  padding: 8px;
-}
-
-tr:nth-child(even) {
-  background-color: #dddddd;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagram Penjualan</title>
+    <!-- Menambahkan Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+    <h2>Laporan Penjualan</h2>
+    <canvas id="salesChart" width="800" height="400"></canvas>
 
-<h2>Laporan Penjualan</h2>
+    <script>
+        // Data dari tabel
+        const labels = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        const data2022 = [4017, 6135, 7091, 5841, 5036, 4547, 3467, 3970, 6313, 3595, 9207, 5945];
+        const data2023 = [2416, 4136, 7935, 8004, 9505, 5026, 6108, 6343, 9404, 9280, 9287, 8689];
 
-<table>
-  <tr>
-    <th>Bulan</th>
-    <th>Januari</th>
-    <th>Februari</th>
-    <th>Maret</th>
-    <th>April</th>
-    <th>Mei</th>
-    <th>Juni</th>
-    <th>Juli</th>
-    <th>Agustus</th>
-    <th>September</th>
-    <th>Oktober</th>
-    <th>November</th>
-    <th>Desember</th>
-  </tr>
-  <tr>
-    <td>2022</td>
-    <td>4.017</td>
-    <td>6.135</td>
-    <td>7.091</td>
-    <td>5.841</td>
-    <td>5.036</td>
-    <td>4.547</td>
-    <td>3.467</td>
-    <td>3.970</td>
-    <td>6.313</td>
-    <td>3.595</td>
-    <td>9.207</td>
-    <td>5.945</td>
-  </tr>
-  <tr>
-    <td>2023</td>
-    <td>2.416</td>
-    <td>4.136</td>
-    <td>7.935</td>
-    <td>8.004</td>
-    <td>9.505</td>
-    <td>5.026</td>
-    <td>6.108</td>
-    <td>6.343</td>
-    <td>9.404</td>
-    <td>9.280</td>
-    <td>9.287</td>
-    <td>8.689</td>
-  </tr>
-</table>
-
-<canvas id="myChart" style="width:100%;max-width:700px"></canvas>
-
-<script>
-const ctx = document.getElementById('myChart').getContext('2d');
-const myChart = new Chart(ctx, {
+        // Konfigurasi Chart.js
+        const ctx = document.getElementById('salesChart').getContext('2d');
+        const salesChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: '2022',
+                        data: data2022,
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)', // Warna biru
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: '2023',
+                        data: data2023,
+                        backgroundColor: 'rgba(255, 99, 132, 0.6)', // Warna merah
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Perbandingan Penjualan 2022 vs 2023'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
