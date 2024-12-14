@@ -24,11 +24,6 @@ function createMatrix(w, h) {
     return matrix;
 }
 
-function createPiece(type) {
-    const index = 'IJLOSTZ'.indexOf(type);
-    return SHAPES[index + 1];
-}
-
 function drawMatrix(matrix, offset) {
     matrix.forEach((row, y) => {
         row.forEach((value, x) => {
@@ -68,14 +63,15 @@ function arenaSweep() {
 }
 
 function playerReset() {
-    player.matrix = createPiece('IJLOSTZ'[Math.floor(Math.random() * 7)]);
+    const pieces = 'IJLOSTZ';
+    player.matrix = createPiece(pieces[Math.floor(Math.random() * pieces.length)]);
     player.pos.y = 0;
     player.pos.x = Math.floor(arena[0].length / 2) - Math.floor(player.matrix[0].length / 2);
+
     if (collide(arena, player)) {
         arena.forEach(row => row.fill(0));
         alert(`Game Over! Skor Anda: ${score}`);
         score = 0;
-        document.getElementById('score').innerText = `Skor: ${score}`;
     }
 }
 
@@ -98,7 +94,6 @@ function playerDrop() {
 function playerRotate() {
     const rotated = player.matrix[0].map((_, i) => player.matrix.map(row => row[i]).reverse());
     player.matrix = rotated;
-    if (collide(arena, player)) player.matrix = player.matrix.reverse();
 }
 
 let dropCounter = 0, dropInterval = 1000, lastTime = 0;
@@ -111,6 +106,7 @@ function update(time = 0) {
 
     context.fillStyle = '#000';
     context.fillRect(0, 0, canvas.width, canvas.height);
+
     drawMatrix(arena, { x: 0, y: 0 });
     drawMatrix(player.matrix, player.pos);
 
@@ -128,6 +124,10 @@ document.getElementById('left').addEventListener('click', () => playerMove(-1));
 document.getElementById('right').addEventListener('click', () => playerMove(1));
 document.getElementById('down').addEventListener('click', playerDrop);
 document.getElementById('rotate').addEventListener('click', playerRotate);
+
+function createPiece(type) {
+    return SHAPES['IJLOSTZ'.indexOf(type) + 1];
+}
 
 playerReset();
 update();
