@@ -13,9 +13,9 @@ body {
     padding: 20px;
     max-width: 1200px; /* Max width for larger screens */
     margin: auto; /* Center the container */
-    display: flex; /* Use flexbox for layout */
-    flex-wrap: wrap; /* Allow wrapping of items */
-    justify-content: center; /* Center items */
+    display: grid; /* Use grid layout */
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive grid */
+    gap: 20px; /* Space between grid items */
 }
 
 h1 {
@@ -26,14 +26,11 @@ h1 {
 }
 
 .certificate {
-    margin: 10px; /* Space between certificates */
     border: 1px solid #ddd; /* Light border */
     border-radius: 8px;
     padding: 15px;
     background-color: #f9f9f9; /* Light background for each certificate */
     transition: transform 0.3s; /* Transition for hover effect */
-    flex: 1 1 300px; /* Flex-grow, flex-shrink, and base width */
-    max-width: 300px; /* Max width for each certificate */
     text-align: center; /* Center text in certificates */
 }
 
@@ -64,7 +61,6 @@ p {
     }
 
     .certificate {
-        margin: 5px; /* Reduce margin on smaller screens */
         padding: 10px; /* Reduce padding on smaller screens */
     }
 
