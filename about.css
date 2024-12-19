@@ -1,0 +1,54 @@
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f4f8; /* Light background color */
+    margin: 0;
+    padding: 20px; /* Add padding to the body */
+}
+
+.container {
+    max-width: 800px; /* Max width for the content */
+    margin: auto; /* Center the container */
+    background-color: #ffffff; /* White background for the content */
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+header {
+    text-align: center; /* Center the header */
+}
+
+h1 {
+    color: #4a90e2; /* Blue color for the title */
+    margin-bottom: 10px;
+}
+
+.about {
+    margin-top: 20px; /* Space above the about section */
+}
+
+h2 {
+    color: #333; /* Dark text color for subtitles */
+    margin-bottom: 10px; /* Space below subtitles */
+}
+
+p {
+    color: #666; /* Gray text color for paragraphs */
+    line-height: 1.6; /* Improve readability */
+    margin-bottom: 15px; /* Space below paragraphs */
+}
+
+footer {
+    text-align: center; /* Center the footer */
+    margin-top: 20px; /* Space above the footer */
+}
+
+footer a {
+    color: #4a90e2; /* Link color */
+    text-decoration: none; /* Remove underline from links */
+}
+
+footer a:hover {
+    text-decoration: underline; /* Underline on hover */
+}
