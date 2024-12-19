@@ -34,7 +34,12 @@ h1 {
     text-align: center; /* Center text in certificates */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
     overflow: hidden; /* Prevent overflow of content */
+}
+
+/* Remove underline from links */
+.certificate a {
     text-decoration: none; /* Remove underline from links */
+    color: inherit; /* Inherit color from parent */
 }
 
 .certificate:hover {
