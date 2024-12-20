@@ -1,25 +1,36 @@
 /* dashboard-karyawan.css */
 
-body {
-    font-family: Arial, sans-serif;
+/* Reset some default styles */
+* {
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    box-sizing: border-box;
 }
 
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+/* Dashboard container */
 .dashboard {
     display: flex;
-    height: 100vh;
+    min-height: 100vh;
 }
 
+/* Header styles */
 .header {
     background-color: #4CAF50;
     color: white;
     padding: 20px;
-    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.header h1 {
+    font-size: 24px;
 }
 
 .user-info {
@@ -31,12 +42,14 @@ body {
     margin-right: 10px;
 }
 
+/* Profile picture */
 .profile-pic {
     width: 40px;
     height: 40px;
     border-radius: 50%;
 }
 
+/* Sidebar styles */
 .sidebar {
     background-color: #333;
     color: white;
@@ -46,7 +59,6 @@ body {
 
 .sidebar nav ul {
     list-style-type: none;
-    padding: 0;
 }
 
 .sidebar nav ul li {
@@ -56,40 +68,65 @@ body {
 .sidebar nav ul li a {
     color: white;
     text-decoration: none;
+    font-size: 18px;
 }
 
 .sidebar nav ul li a:hover {
     text-decoration: underline;
 }
 
+/* Main content styles */
 .main-content {
     flex: 1;
     padding: 20px;
-    background-color: #fff;
-    overflow-y: auto;
 }
 
 .card {
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 15px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
+    padding: 20px;
 }
 
 .card h2 {
-    margin-top: 0;
+    font-size: 20px;
+    margin-bottom: 10px;
 }
 
 .card ul {
     list-style-type: none;
-    padding: 0;
 }
 
 .card ul li {
     margin: 5px 0;
 }
 
-.card p {
-    margin: 0;
+/* Responsive styles */
+@media (max-width: 768px) {
+    .dashboard {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .header h1 {
+        font-size: 20px;
+    }
+
+    .main-content {
+        padding: 10px;
+    }
+
+    .card {
+        padding: 15px;
+    }
 }
